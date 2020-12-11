@@ -21,6 +21,8 @@ export default function Dashboard({ subs }) {
     //------associative--------
     //  map(map(compose(feedParse, prop("feedUrl"))), subs);
 
+    // put all epsiodes from each subscription into one array
+    // for rendering
     const appendToFeed = (stream) => {
       //this for each happens async
       stream.forEach((item) => {
