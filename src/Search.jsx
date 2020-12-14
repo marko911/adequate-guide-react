@@ -13,17 +13,18 @@ import {
   prop,
   propEq,
 } from "ramda";
-import { useEffect, useState } from "react";
-import { either, Maybe, maybe_, of } from "sanctuary";
+import { useState } from "react";
+import { either, maybe_ } from "sanctuary";
 
-import { fetchMedia, searchAudiobook } from "./api";
+import { fetchMedia } from "./api";
 
 const none = () => [];
 
-const isPodcast = propEq("kind", "podcast");
-const renameKey = curry((oldKey, newKey, obj) =>
-  assoc(newKey, prop(oldKey, obj), dissoc(oldKey, obj))
-);
+// const isPodcast = propEq("kind", "podcast");
+// const renameKey = curry((oldKey, newKey, obj) =>
+//   assoc(newKey, prop(oldKey, obj), dissoc(oldKey, obj))
+// );
+
 const err = (err) => {
   return [];
 };

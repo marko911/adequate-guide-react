@@ -1,7 +1,6 @@
-import { concat, map } from "ramda";
+// import {  } from "ramda";
 import { useEffect, useState } from "react";
-import { Just, Left, Nothing, of } from "sanctuary";
-import { Right } from "sanctuary-either";
+import { Just, Nothing, concat } from "sanctuary";
 
 import "./App.css";
 import Dashboard, { parseSubs } from "./Dashboard";
@@ -22,7 +21,6 @@ function App() {
 
   const handleSave = (data) => () => {
     const newSubs = concat(Just([data]), subs);
-    console.log("🚀 ~ file: App.js ~ line 1 ~ handleSave ~ subs", subs);
 
     setSubs(newSubs);
     localStorage.setItem("subs", JSON.stringify(parseSubs(newSubs)));

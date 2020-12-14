@@ -1,6 +1,15 @@
-import { compose, head, identity, map, prop, sort } from "ramda";
+// import { compose, head, identity, map, prop, sort } from "ramda";
 import React, { useEffect, useState } from "react";
-import { maybe_ } from "sanctuary";
+import {
+  maybe_,
+  map,
+  prop,
+  sort,
+  head,
+  identity,
+  compose,
+  Maybe,
+} from "sanctuary";
 import { feedParse } from "./api";
 import Episode from "./Episode";
 
