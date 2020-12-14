@@ -1,15 +1,8 @@
 // import { compose, head, identity, map, prop, sort } from "ramda";
 import React, { useEffect, useState } from "react";
-import {
-  maybe_,
-  map,
-  prop,
-  sort,
-  head,
-  identity,
-  compose,
-  Maybe,
-} from "sanctuary";
+import { maybe_ } from "sanctuary";
+
+import { map, prop, sort, head, identity, compose } from "ramda";
 import { feedParse } from "./api";
 import Episode from "./Episode";
 
@@ -52,10 +45,7 @@ export default function Dashboard({ subs }) {
     map(map(runTask), streams);
   }, [subs]);
 
-  const censoredNameOfFirstSub = map(
-    compose(prop("collectionCensoredName"), head),
-    subs
-  );
+  const censoredNameOfFirstSub = map(compose(prop("collectionCensoredName"), head), subs);
 
   const datediff = function (a, b) {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
