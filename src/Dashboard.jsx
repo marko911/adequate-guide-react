@@ -7,11 +7,6 @@ import { feedParse } from "./api";
 import Episode from "./Episode";
 import { empty } from "most";
 
-const log = (x) => {
-  console.log("log: ", x);
-  return x;
-};
-
 const nothing = () => [];
 
 export const parseSubs = maybe_(nothing)(identity);
@@ -31,8 +26,9 @@ export default function Dashboard({ subs }) {
   const [finalStream, setFinalStream] = useState(empty());
 
   useEffect(() => {
-    console.log({ done });
     if (done) {
+      // the consolidated finalStream now defines how to handle all items read from stream
+      // which we just add to a single array
       finalStream.forEach((item) => {
         if (item.detail) {
           setEpisodes((old) => [...old, item.detail]);
@@ -45,8 +41,7 @@ export default function Dashboard({ subs }) {
     // get feed for each subscription
     const maybeStreams = map(map(compose(feedParse, prop("feedUrl"))), subs);
 
-    // put all epsiodes from each subscription into one array
-    // for rendering
+    // each stream object gets merged into one
     const appendToFeed = (stream = []) => {
       setFinalStream(finalStream.concat(stream));
     };
@@ -56,7 +51,8 @@ export default function Dashboard({ subs }) {
         onResolved: appendToFeed,
       });
     };
-    // unwrap task from Maybe
+
+    // unwrap tasks from Maybe, await each task, signal to our component we are done
     map(compose(thunkify(setDone)(true), map(runTask)), maybeStreams);
   }, [subs]);
 
