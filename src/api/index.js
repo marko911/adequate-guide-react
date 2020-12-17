@@ -5,14 +5,13 @@ import { Just, Nothing } from "sanctuary-maybe";
 import FeedParser from "feedparser";
 import stringToStream from "string-to-stream";
 
-import { fromEvent } from "most";
+import { fromEvent, fromPromise } from "most";
 
 const SEARCH_URL = "https://itunes.apple.com/search";
 
 export const searchPods = (term) => fetchMedia({ media: "podcast", term });
 
-export const searchAudiobook = (term) =>
-  fetchMedia({ media: "audiobook", term });
+export const searchAudiobook = (term) => fetchMedia({ media: "audiobook", term });
 
 export const fetchMedia = ({ term, media, limit = 5 }) =>
   term
@@ -53,10 +52,8 @@ export const feedParse = (feedUrl) => {
       console.log("No response!");
       return;
     }
-    stringToStream(response.data).pipe(feedparser);
 
-    const event = () =>
-      new CustomEvent("episode", { detail: feedparser.read() });
+    const event = () => new CustomEvent("episode", { detail: feedparser.read() });
     const myTarget = new EventTarget();
     const myStream = fromEvent("episode", myTarget);
 
@@ -67,9 +64,12 @@ export const feedParse = (feedUrl) => {
       if (counter > 10) {
         return;
       }
+      const newItemEv = event();
 
-      myTarget.dispatchEvent(event());
+      myTarget.dispatchEvent(newItemEv);
     });
+
+    stringToStream(response.data).pipe(feedparser);
 
     resolver.resolve(myStream);
   });

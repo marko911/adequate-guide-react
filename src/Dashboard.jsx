@@ -2,38 +2,53 @@
 import React, { useEffect, useState } from "react";
 import { maybe_ } from "sanctuary";
 
-import { map, prop, sort, head, identity, compose } from "ramda";
+import { map, prop, sort, head, identity, compose, thunkify } from "ramda";
 import { feedParse } from "./api";
 import Episode from "./Episode";
+import { empty } from "most";
+
+const log = (x) => {
+  console.log("log: ", x);
+  return x;
+};
 
 const nothing = () => [];
+
 export const parseSubs = maybe_(nothing)(identity);
 
-const eps = [];
-const getEps = () => eps;
+const noSubs = () => "No podcasts added, use search to add";
+const parseLatestTitle = maybe_(noSubs)((title) => (
+  <div>
+    <span>Latest pod added: {title}</span>
+    <h2>Showing 10 latest episodes</h2>
+  </div>
+));
 
 export default function Dashboard({ subs }) {
   // subs Maybe(subscription)
   const [episodes, setEpisodes] = useState([]);
+  const [done, setDone] = useState(false);
+  const [finalStream, setFinalStream] = useState(empty());
+
+  useEffect(() => {
+    console.log({ done });
+    if (done) {
+      finalStream.forEach((item) => {
+        if (item.detail) {
+          setEpisodes((old) => [...old, item.detail]);
+        }
+      });
+    }
+  }, [finalStream, done]);
 
   useEffect(async () => {
     // get feed for each subscription
-    const streams = map(compose(map(feedParse), map(prop("feedUrl"))), subs); // Maybe([Task])
-
-    //------associative--------
-    //  map(map(compose(feedParse, prop("feedUrl"))), subs);
+    const maybeStreams = map(map(compose(feedParse, prop("feedUrl"))), subs);
 
     // put all epsiodes from each subscription into one array
     // for rendering
-    const appendToFeed = (stream) => {
-      //this for each happens async
-      stream.forEach((item) => {
-        if (item.detail) {
-          setEpisodes([...getEps(), item.detail]);
-
-          eps.push(item.detail);
-        }
-      });
+    const appendToFeed = (stream = []) => {
+      setFinalStream(finalStream.concat(stream));
     };
 
     const runTask = (task) => {
@@ -41,8 +56,8 @@ export default function Dashboard({ subs }) {
         onResolved: appendToFeed,
       });
     };
-
-    map(map(runTask), streams);
+    // unwrap task from Maybe
+    map(compose(thunkify(setDone)(true), map(runTask)), maybeStreams);
   }, [subs]);
 
   const censoredNameOfFirstSub = map(compose(prop("collectionCensoredName"), head), subs);
@@ -52,14 +67,10 @@ export default function Dashboard({ subs }) {
   };
 
   const sortedEpisodes = sort(datediff, episodes);
-  console.log("🚀 ~ xxx", sortedEpisodes);
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="mb-4">
-        Latest added pod:
-        {censoredNameOfFirstSub && <h2>{parseSubs(censoredNameOfFirstSub)}</h2>}
-      </div>
+      <div className="mb-4">{parseLatestTitle(censoredNameOfFirstSub)}</div>
       {sortedEpisodes.slice(0, 10).map((item, i) => (
         <Episode data={item} key={i} />
       ))}

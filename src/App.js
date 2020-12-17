@@ -1,6 +1,7 @@
 // import {  } from "ramda";
 import { useEffect, useState } from "react";
-import { Just, Nothing, concat } from "sanctuary";
+import { Just, concat } from "sanctuary";
+import { Nothing } from "sanctuary-maybe";
 
 import "./App.css";
 import Dashboard, { parseSubs } from "./Dashboard";
@@ -14,23 +15,21 @@ function App() {
     const storedSubs = JSON.parse(localStorage.getItem("subs"));
     if (storedSubs) {
       setSubs(Just(storedSubs));
-    } else {
-      setSubs(Nothing);
     }
   }, []);
 
   const handleSave = (data) => () => {
-    const newSubs = concat(Just([data]), subs);
+    const newSubs = concat(Just([data]))(subs);
 
     setSubs(newSubs);
     localStorage.setItem("subs", JSON.stringify(parseSubs(newSubs)));
   };
 
-  const [page, setPage] = useState("search");
+  const [page, setPage] = useState("feed");
   const goPage = (page) => () => setPage(page);
 
   return (
-    <div className="bg-gray-100">
+    <div className="">
       <Header goPage={goPage} page={page} />
       <div className="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8 h-full">
         {page === "search" ? (

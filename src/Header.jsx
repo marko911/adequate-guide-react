@@ -45,19 +45,17 @@ export default function Header({ goPage, page }) {
           </div>
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0 flex items-center">
-              <h2 className="text-white font-xl uppercase font-semibold">
-                PodFeed
-              </h2>
+              <h2 className="text-white font-xl uppercase font-semibold">CastBot</h2>
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
                 <a
-                  onClick={goPage("dash")}
+                  onClick={goPage("feed")}
                   className={`cursor-pointer ${
-                    page === "dash" ? "bg-gray-900" : ""
+                    page === "feed" ? "bg-gray-900" : ""
                   } cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium`}
                 >
-                  Dashboard
+                  Feed
                 </a>
                 <a
                   onClick={goPage("search")}
