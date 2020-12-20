@@ -19,7 +19,7 @@ const parseLatestTitle = maybe_(noSubs)((title) => (
   </div>
 ));
 
-export default function Dashboard({ subs }) {
+export default function Feed({ subs }) {
   // subs Maybe(subscription)
   const [episodes, setEpisodes] = useState([]);
   const [done, setDone] = useState(false);
@@ -56,7 +56,10 @@ export default function Dashboard({ subs }) {
     map(compose(thunkify(setDone)(true), map(runTask)), maybeStreams);
   }, [subs]);
 
-  const censoredNameOfFirstSub = map(compose(prop("collectionCensoredName"), head), subs);
+  const censoredNameOfFirstSub = map(
+    compose(prop("collectionCensoredName"), head),
+    subs
+  );
 
   const datediff = function (a, b) {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
