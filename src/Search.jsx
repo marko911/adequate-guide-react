@@ -2,7 +2,7 @@ import React from "react";
 import { ClearBtn, SearchBtn } from "./Buttons";
 import SearchResult from "./Result";
 import ResultsTable from "./ResultsTable";
-import { assoc, compose, curry, dissoc, flatten, map, path, prop, propEq } from "ramda";
+import { compose, curry, flatten, map, path } from "ramda";
 import { useState } from "react";
 import { either, maybe_ } from "sanctuary";
 
