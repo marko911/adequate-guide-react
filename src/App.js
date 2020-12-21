@@ -4,7 +4,7 @@ import { Just, concat } from "sanctuary";
 import { Nothing } from "sanctuary-maybe";
 
 import "./App.css";
-import Dashboard, { parseSubs } from "./Dashboard";
+import Feed, { parseSubs } from "./Feed";
 import Header from "./Header";
 import Search from "./Search";
 
@@ -35,7 +35,7 @@ function App() {
         {page === "search" ? (
           <Search saveSub={handleSave} />
         ) : (
-          <Dashboard subs={subs} /> //because subs is a Maybe - parse to extract
+          <Feed subs={subs} /> //because subs is a Maybe - parse to extract
         )}
       </div>
     </div>
