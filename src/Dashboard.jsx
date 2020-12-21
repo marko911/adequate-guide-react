@@ -37,7 +37,7 @@ export default function Dashboard({ subs }) {
     }
   }, [finalStream, done]);
 
-  useEffect(async () => {
+  useEffect(() => {
     // get feed for each subscription
     const maybeStreams = map(map(compose(feedParse, prop("feedUrl"))), subs);
 
