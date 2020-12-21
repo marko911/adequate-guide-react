@@ -5,7 +5,7 @@ import { Just, Nothing } from "sanctuary-maybe";
 import FeedParser from "feedparser";
 import stringToStream from "string-to-stream";
 
-import { fromEvent, fromPromise } from "most";
+import { fromEvent } from "most";
 
 const SEARCH_URL = "https://itunes.apple.com/search";
 

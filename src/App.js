@@ -28,7 +28,7 @@ function App() {
   const goPage = (page) => () => setPage(page);
 
   return (
-    <div className="">
+    <div>
       <Header goPage={goPage} page={page} />
       <div className="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8 h-full">
         {page === "search" ? (
