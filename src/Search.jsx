@@ -4,7 +4,7 @@ import SearchResult from "./Result";
 import ResultsTable from "./ResultsTable";
 import { compose, curry, flatten, lensPath, map, over, path } from "ramda";
 import { useState } from "react";
-import { either, prop, toUpper } from "sanctuary";
+import { either, toUpper } from "sanctuary";
 
 import { fetchMedia } from "./api";
 

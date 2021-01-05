@@ -1,5 +1,4 @@
-// import {  } from "ramda";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Just, concat } from "sanctuary";
 import { Nothing } from "sanctuary-maybe";
 
@@ -29,7 +28,7 @@ function App() {
   const goPage = (page) => () => setPage(page);
 
   return (
-    <div className="">
+    <div>
       <Header goPage={goPage} page={page} />
       <div className="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8 h-full">
         {page === "search" ? (

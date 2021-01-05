@@ -1,4 +1,3 @@
-// import { compose, head, identity, map, prop, sort } from "ramda";
 import React, { useEffect, useState } from "react";
 import { maybe_ } from "sanctuary";
 
@@ -37,7 +36,7 @@ export default function Feed({ subs }) {
     }
   }, [finalStream, done]);
 
-  useEffect(async () => {
+  useEffect(() => {
     // get feed for each subscription
     const maybeStreams = map(map(compose(feedParse, prop("feedUrl"))), subs);
 
@@ -56,10 +55,7 @@ export default function Feed({ subs }) {
     map(compose(thunkify(setDone)(true), map(runTask)), maybeStreams);
   }, [subs]);
 
-  const censoredNameOfFirstSub = map(
-    compose(prop("collectionCensoredName"), head),
-    subs
-  );
+  const censoredNameOfFirstSub = map(compose(prop("collectionCensoredName"), head), subs);
 
   const datediff = function (a, b) {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
