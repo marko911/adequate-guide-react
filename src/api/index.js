@@ -1,17 +1,12 @@
 import axios from "axios";
 import Task, { task } from "folktale/concurrency/task";
 import { Left, Right } from "sanctuary-either";
-import { Just, Nothing } from "sanctuary-maybe";
 import FeedParser from "feedparser";
 import stringToStream from "string-to-stream";
 
-import { fromEvent, fromPromise } from "most";
+import { fromEvent } from "most";
 
 const SEARCH_URL = "https://itunes.apple.com/search";
-
-export const searchPods = (term) => fetchMedia({ media: "podcast", term });
-
-export const searchAudiobook = (term) => fetchMedia({ media: "audiobook", term });
 
 export const fetchMedia = ({ term, media, limit = 5 }) =>
   term
@@ -21,13 +16,13 @@ export const fetchMedia = ({ term, media, limit = 5 }) =>
             params: { term, media, limit },
           });
 
-          resolver.resolve(Just(Right(response)));
+          resolver.resolve(Right(response));
         } catch (err) {
           console.log("🚀 ~ file: index.js ~ line 24 ~ ?task ~ err", err);
-          resolver.reject(Just(Left(err)));
+          resolver.resolve(Left(err));
         }
       })
-    : Task.of(Nothing);
+    : Task.of(Left(null));
 
 export const feedParse = (feedUrl) => {
   return task(async (resolver) => {
@@ -53,7 +48,8 @@ export const feedParse = (feedUrl) => {
       return;
     }
 
-    const event = () => new CustomEvent("episode", { detail: feedparser.read() });
+    const event = () =>
+      new CustomEvent("episode", { detail: feedparser.read() });
     const myTarget = new EventTarget();
     const myStream = fromEvent("episode", myTarget);
 

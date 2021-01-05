@@ -2,13 +2,11 @@ import React from "react";
 import { ClearBtn, SearchBtn } from "./Buttons";
 import SearchResult from "./Result";
 import ResultsTable from "./ResultsTable";
-import { assoc, compose, curry, dissoc, flatten, map, path, prop, propEq } from "ramda";
+import { compose, curry, flatten, lensPath, map, over, path } from "ramda";
 import { useState } from "react";
-import { either, maybe_ } from "sanctuary";
+import { either, prop, toUpper } from "sanctuary";
 
 import { fetchMedia } from "./api";
-
-const none = () => [];
 
 // const isPodcast = propEq("kind", "podcast");
 // const renameKey = curry((oldKey, newKey, obj) =>
@@ -19,8 +17,9 @@ const err = (err) => {
   return [];
 };
 
-const success = path(["data", "results"]);
-
+const success = (res) => {
+  return path(["data", "results"])(res);
+};
 // if we wanna consolidate ----
 
 // const successFormatted = compose(
@@ -30,7 +29,7 @@ const success = path(["data", "results"]);
 //   success
 // );
 
-const parseResponse = maybe_(none)(either(err)(success));
+const parseResponse = either(err)(success);
 
 export default function Search({ subs, saveSub }) {
   const [query, setQuery] = useState("");
@@ -38,8 +37,14 @@ export default function Search({ subs, saveSub }) {
 
   const fetchBoth = async (e) => {
     e.preventDefault();
+    const upperTitles = over(lensPath(["config", "url"]), toUpper);
+
     const combineResults = curry((pods, audiobooks) => {
-      return compose(flatten, map(parseResponse))([pods, audiobooks]);
+      return compose(
+        flatten,
+        map(parseResponse),
+        map(map(upperTitles))
+      )([pods, audiobooks]);
     });
 
     const liftA2 = curry((g, f1, f2) => {
@@ -49,7 +54,7 @@ export default function Search({ subs, saveSub }) {
     const otherTasks = liftA2(
       combineResults,
       fetchMedia({ term: query, media: "podcast" }),
-      fetchMedia({ term: query, media: "audiobook" })
+      fetchMedia({ term: query, media: "audiobookz" })
     );
 
     otherTasks.run().listen({
