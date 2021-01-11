@@ -38,7 +38,7 @@ export default function Feed({ subs }) {
 
   useEffect(() => {
     // get feed for each subscription
-    const maybeStreams = map(map(compose(feedParse, prop("feedUrl"))), subs);
+    const maybeTasksOfStreams = map(map(compose(feedParse, prop("feedUrl"))), subs);
 
     // each stream object gets merged into one
     const appendToFeed = (stream = []) => {
@@ -52,7 +52,7 @@ export default function Feed({ subs }) {
     };
 
     // unwrap tasks from Maybe, await each task, signal to our component we are done
-    map(compose(thunkify(setDone)(true), map(runTask)), maybeStreams);
+    map(compose(thunkify(setDone)(true), map(runTask)), maybeTasksOfStreams);
   }, [subs]);
 
   const censoredNameOfFirstSub = map(compose(prop("collectionCensoredName"), head), subs);
