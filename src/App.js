@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Just, concat } from "sanctuary";
+import { Just, concat, Maybe, of } from "sanctuary";
 import { Nothing } from "sanctuary-maybe";
 
 import "./App.css";
@@ -9,12 +9,9 @@ import Search from "./Search";
 
 function App() {
   const [subs, setSubs] = useState(Nothing);
-
   useEffect(() => {
     const storedSubs = JSON.parse(localStorage.getItem("subs"));
-    if (storedSubs) {
-      setSubs(Just(storedSubs));
-    }
+    setSubs(of(Maybe)(storedSubs));
   }, []);
 
   const handleSave = (data) => () => {
@@ -32,7 +29,7 @@ function App() {
       <Header goPage={goPage} page={page} />
       <div className="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8 h-full">
         {page === "search" ? (
-          <Search saveSub={handleSave} />
+          <Search handleSave={handleSave} />
         ) : (
           <Feed subs={subs} /> //because subs is a Maybe - parse to extract
         )}

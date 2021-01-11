@@ -32,7 +32,7 @@ const success = path(["data", "results"]);
 
 const parseResponse = maybe_(none)(either(err)(success));
 
-export default function Search({ subs, saveSub }) {
+export default function Search({ subs, handleSave }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
 
@@ -84,7 +84,7 @@ export default function Search({ subs, saveSub }) {
 
       <ResultsTable>
         {results.map((data) => (
-          <SearchResult key={data.collectionId} data={data} onSave={saveSub} />
+          <SearchResult key={data.collectionId} data={data} onSave={handleSave} />
         ))}
       </ResultsTable>
     </>
